@@ -9,6 +9,9 @@ namespace SecurityLibrary
 {
     public class HillCipher : ICryptographicTechnique<List<int>, List<int>>
     {
+        
+
+
         private List<int> MultiblyMatrix(List<List<int>> key, List<int> MatRow, int m)
         {
             List<int> result = new List<int>();
@@ -175,30 +178,79 @@ namespace SecurityLibrary
         //------------------
         public List<int> Decrypt(List<int> cipherText, List<int> key)
         {
+             double Determinant_matrix(int m, int[,] keyMatrix)
+            {
 
+                int[,] _InnerMat = new int[m - 1, m - 1];
+                double det = 0;
+                switch (m)
+                {
+                    case 2:
+                        return ((keyMatrix[0, 0] * keyMatrix[1, 1]) - (keyMatrix[1, 0] * keyMatrix[0, 1]));
+                        break;
+                    case 3:
+                        int k = 0;
+                        while (k < m)
+                        {
+                            int InnerI = 0, i = 1;
+                            for (; i < m;)
+                            {
+                                int InnerJ = 0, j = 0;
+                                for (; j < m; j++)
+                                {
+                                    if (j == k)
+                                    {
+                                        continue;
+                                    }
+                                    _InnerMat[InnerI, InnerJ] = keyMatrix[i, j];
+                                    InnerJ++;
+                                }
+                                InnerI += 1;
+                                i += 1;
+                            }
+                            double res = Determinant_matrix(m - 1, _InnerMat);
+                            double _powOp = (Math.Pow(-1, k) * keyMatrix[0, k] * res);
+                            det = det + _powOp;
+                            k++;
+                        }
+                        break;
+                }
+                return det;
+            }
+
+            int Greatest_common_divisor(int x)
+            {
+                int y = 26;
+                while (x != 0 && y != 0)
+                {
+                    if (x > y)
+                        x = x % y;
+                    else
+                        y = y % x;
+                }
+                int _desc = (x == 0 ? y : x);
+                return _desc;
+
+            }
 
             // List<int> key1 = new List<int>(key.Count);
-            int CSQ = Convert.ToInt32(Math.Sqrt(key.Count));
-
-
-            int[,] keyOfMat = new int[CSQ, CSQ];
-            void intiL(int D) { D = 0; }
-            int Count = 1;
-            intiL(Count);
-            for (int i = 0; i < CSQ;)
+            int _CSQ = Convert.ToInt32(Math.Sqrt(key.Count));
+            int[,] _keyOfMat = new int[_CSQ, _CSQ];
+            int _Count = 0;
+            for (int i = 0; i < _CSQ;)
             {
                 int j = 0;
-                for (; j < CSQ;)
+                for (; j < _CSQ;)
                 {
-                    bool _con1 = (key[Count] >= 0), _con2 = (key[Count] <= 26);
+                    bool _con1 = (key[_Count] >= 0), _con2 = (key[_Count] <= 26);
                     if (_con1 && _con2)
-                        keyOfMat[i, j] = key[Count++];
-                    else if (key[Count] > 26)
+                        _keyOfMat[i, j] = key[_Count++];
+                    else if (key[_Count] > 26)
                     {
-                        int x = key[Count];
+                        int x = key[_Count];
                         x = x % 26;
-                            keyOfMat[i, j] = x;
-                        Count++;
+                        _keyOfMat[i, j] = x;
+                        _Count++;
                     }
                     else
                     {
@@ -208,58 +260,49 @@ namespace SecurityLibrary
                 }
                 i += 1;
             }
-            double OutRs = Determinant_matrix(CSQ, keyOfMat);
-            OutRs = OutRs % 26;
-            if (OutRs < 0)
-                OutRs = OutRs + 26;
+            double _OutRes = Determinant_matrix(_CSQ, _keyOfMat);
+            _OutRes = _OutRes % 26;
+            if (_OutRes < 0)
+                _OutRes = _OutRes + 26;
 
-            int _GcdRes = Greatest_common_divisor((int)OutRs);
-           
+            int _GcdRes = Greatest_common_divisor((int)_OutRes);
+            //TESTCASE : HillCipherError3
+            // No common factors between det(k) and 26(GCD(26, det(k)) = 1)
 
             if (_GcdRes != 1)
                 throw new Exception();
 
-            if (CSQ == 2)
+            if (_CSQ == 2)
             {
-                void intlo(float f) { f = 0; }
-                float theInv = 1;
-
-                intlo(theInv);
+                float _theInv = 0;
                 float A, B, C, D;
-                A = (keyOfMat[0, 0]);
-
-                B = (keyOfMat[0, 1]);
-
-               
-                   C = (keyOfMat[1, 0]);
-                         
-                D = (keyOfMat[1, 1]);
-                theInv = 1 / ((A * D) - (B * C));
-                A = A * theInv; D = D * theInv;
-                B = B * theInv * -1; C = C * theInv * -1;
+                A = (_keyOfMat[0, 0]);
+                B = (_keyOfMat[0, 1]);
+                C = (_keyOfMat[1, 0]);
+                D = (_keyOfMat[1, 1]);
+                _theInv = 1 / ((A * D) - (B * C));
+                A = A * _theInv; D = D * _theInv;
+                B = B * _theInv * -1; C = C * _theInv * -1;
                 key[0] = (int)D;
                 key[1] = (int)B;
                 key[2] = (int)C;
                 key[3] = (int)A;
                 return Encrypt(cipherText, key);
             }
-            double c = 0, b = 0, d = 26 - OutRs; Count = 1; 
-
-
+            double c = 0, b = 0, d = 26 - _OutRes; _Count = 1;
             for (int i = 0; i < cipherText.Count; i++)
             {
-                int _InnerOp = (26 * Count + 1);
+                int _InnerOp = (26 * _Count + 1);
                 double _theInncon = _InnerOp % d;
-
                 if (_theInncon != 0)
-                    Count += 1;
+                    _Count += 1;
                 else
                     break;
             }
-            c = (26 * Count + 1) / d;
+            c = (26 * _Count + 1) / d;
             b = 26 - c;
-            int[,] _theInnerMat = new int[CSQ - 1, CSQ - 1];
-            double[,] keyMatrixOutput = new double[CSQ, CSQ];
+            int[,] _theInnerMat = new int[_CSQ - 1, _CSQ - 1];
+            double[,] keyMatrixOutput = new double[_CSQ, _CSQ];
             int Lenj = 0, Leni = 0;
 
             // loop el k de btlef 3l el row
@@ -276,14 +319,14 @@ namespace SecurityLibrary
                             bool InCon3 = (x == i || y == j);
                             if (!InCon3)
                             {
-                                _theInnerMat[II, III] = keyOfMat[x, y];
+                                _theInnerMat[II, III] = _keyOfMat[x, y];
                                 III++;
                                 II = II + (III / 2);
                                 III %= 2;
                             }
                             y += 1;
                         }
-                    double _theAnsPowD = (b * (Math.Pow(-1, (i + j)) * (Determinant_matrix(CSQ - 1, _theInnerMat))) % 26);
+                    double _theAnsPowD = (b * (Math.Pow(-1, (i + j)) * (Determinant_matrix(_CSQ - 1, _theInnerMat))) % 26);
                     if (_theAnsPowD < 0)
                         _theAnsPowD += 26;
                     keyMatrixOutput[Leni, Lenj] = _theAnsPowD;
@@ -309,13 +352,13 @@ namespace SecurityLibrary
                 i += 1;
             }
             keyMatrixOutput = _FiRes;
-            Count = 0;
-            for (int i = 0; i < CSQ;)
+            _Count = 0;
+            for (int i = 0; i < _CSQ;)
             {
-                for (int j = 0; j < CSQ;)
+                for (int j = 0; j < _CSQ;)
                 {
-                    key[Count] = (int)keyMatrixOutput[i, j];
-                    Count++; j++;
+                    key[_Count] = (int)keyMatrixOutput[i, j];
+                    _Count++; j++;
                 }
                 i += 1;
             }
@@ -396,7 +439,11 @@ namespace SecurityLibrary
             int _desc = (x == 0 ? y : x);
             return _desc;
 
+
         }
+
+     
+  
 
 
         public List<int> Encrypt(List<int> plainText, List<int> key)
