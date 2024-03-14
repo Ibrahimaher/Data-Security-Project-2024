@@ -64,17 +64,21 @@ namespace SecurityLibrary
             List<int> temp = new List<int>();
             bool isEqual = false;
 
-            //if all loops are while or do-while loops , some test won't pass !!
 
 
             int i = 0;
             do
             {
-                for (int j = 0; j < 26; j++)
+               
+                
+                  for (int j = 0; j < 26; j++)
                 {
-                    for (int k = 0; k < 26; k++)
+                  
+                      for (int k = 0; k < 26; k++)
                     {
-                        for (int l = 0; l < 26; l++)
+
+
+                         for (int l = 0; l < 26; l++)
                         {
                             temp = Encrypt(plainText, new List<int> { l, k, j, i });
                             isEqual = Enumerable.SequenceEqual(temp, cipherText);
@@ -115,13 +119,16 @@ namespace SecurityLibrary
                         break;
                 }
                 Q = A3 / B3;
-                T1 = A1 - Q * B1;
+                     T1 = A1 - Q * B1;
+                
                 T2 = A2 - Q * B2;
                 T3 = A3 - Q * B3;
                 A1 = B1;
+
                 A2 = B2;
-                A3 = B3;
-                B1 = (int)T1;
+                        A3 = B3;
+          
+                         B1 = (int)T1;
                 B2 = (int)T2;
                 B3 = (int)T3;
             }
@@ -168,26 +175,30 @@ namespace SecurityLibrary
         //------------------
         public List<int> Decrypt(List<int> cipherText, List<int> key)
         {
-            int _Count = 0;
 
 
             // List<int> key1 = new List<int>(key.Count);
-            int _CSQ = Convert.ToInt32(Math.Sqrt(key.Count));
-            int[,] _keyOfMat = new int[_CSQ, _CSQ];
-            for (int i = 0; i < _CSQ;)
+            int CSQ = Convert.ToInt32(Math.Sqrt(key.Count));
+
+
+            int[,] keyOfMat = new int[CSQ, CSQ];
+            void intiL(int D) { D = 0; }
+            int Count = 1;
+            intiL(Count);
+            for (int i = 0; i < CSQ;)
             {
                 int j = 0;
-                for (; j < _CSQ;)
+                for (; j < CSQ;)
                 {
-                    bool _con1 = (key[_Count] >= 0), _con2 = (key[_Count] <= 26);
+                    bool _con1 = (key[Count] >= 0), _con2 = (key[Count] <= 26);
                     if (_con1 && _con2)
-                        _keyOfMat[i, j] = key[_Count++];
-                    else if (key[_Count] > 26)
+                        keyOfMat[i, j] = key[Count++];
+                    else if (key[Count] > 26)
                     {
-                        int x = key[_Count];
+                        int x = key[Count];
                         x = x % 26;
-                        _keyOfMat[i, j] = x;
-                        _Count++;
+                            keyOfMat[i, j] = x;
+                        Count++;
                     }
                     else
                     {
@@ -197,50 +208,58 @@ namespace SecurityLibrary
                 }
                 i += 1;
             }
-            double _OutRes = Determinant_matrix(_CSQ, _keyOfMat);
-            _OutRes = _OutRes % 26;
-            if (_OutRes < 0)
-                _OutRes = _OutRes + 26;
+            double OutRs = Determinant_matrix(CSQ, keyOfMat);
+            OutRs = OutRs % 26;
+            if (OutRs < 0)
+                OutRs = OutRs + 26;
 
-            int _GcdRes = Greatest_common_divisor((int)_OutRes);
-            //TESTCASE : HillCipherError3
-            // No common factors between det(k) and 26(GCD(26, det(k)) = 1)
+            int _GcdRes = Greatest_common_divisor((int)OutRs);
+           
 
             if (_GcdRes != 1)
                 throw new Exception();
 
-            if (_CSQ == 2)
+            if (CSQ == 2)
             {
-                float _theInv = 0;
+                void intlo(float f) { f = 0; }
+                float theInv = 1;
+
+                intlo(theInv);
                 float A, B, C, D;
-                A = (_keyOfMat[0, 0]);
-                B = (_keyOfMat[0, 1]);
-                C = (_keyOfMat[1, 0]);
-                D = (_keyOfMat[1, 1]);
-                _theInv = 1 / ((A * D) - (B * C));
-                A = A * _theInv; D = D * _theInv;
-                B = B * _theInv * -1; C = C * _theInv * -1;
+                A = (keyOfMat[0, 0]);
+
+                B = (keyOfMat[0, 1]);
+
+               
+                   C = (keyOfMat[1, 0]);
+                         
+                D = (keyOfMat[1, 1]);
+                theInv = 1 / ((A * D) - (B * C));
+                A = A * theInv; D = D * theInv;
+                B = B * theInv * -1; C = C * theInv * -1;
                 key[0] = (int)D;
                 key[1] = (int)B;
                 key[2] = (int)C;
                 key[3] = (int)A;
                 return Encrypt(cipherText, key);
             }
-            double c = 0, b = 0, d = 26 - _OutRes; _Count = 1;
+            double c = 0, b = 0, d = 26 - OutRs; Count = 1; 
+
+
             for (int i = 0; i < cipherText.Count; i++)
             {
-                int _InnerOp = (26 * _Count + 1);
+                int _InnerOp = (26 * Count + 1);
                 double _theInncon = _InnerOp % d;
 
                 if (_theInncon != 0)
-                    _Count += 1;
+                    Count += 1;
                 else
                     break;
             }
-            c = (26 * _Count + 1) / d;
+            c = (26 * Count + 1) / d;
             b = 26 - c;
-            int[,] _theInnerMat = new int[_CSQ - 1, _CSQ - 1];
-            double[,] keyMatrixOutput = new double[_CSQ, _CSQ];
+            int[,] _theInnerMat = new int[CSQ - 1, CSQ - 1];
+            double[,] keyMatrixOutput = new double[CSQ, CSQ];
             int Lenj = 0, Leni = 0;
 
             // loop el k de btlef 3l el row
@@ -257,14 +276,14 @@ namespace SecurityLibrary
                             bool InCon3 = (x == i || y == j);
                             if (!InCon3)
                             {
-                                _theInnerMat[II, III] = _keyOfMat[x, y];
+                                _theInnerMat[II, III] = keyOfMat[x, y];
                                 III++;
                                 II = II + (III / 2);
                                 III %= 2;
                             }
                             y += 1;
                         }
-                    double _theAnsPowD = (b * (Math.Pow(-1, (i + j)) * (Determinant_matrix(_CSQ - 1, _theInnerMat))) % 26);
+                    double _theAnsPowD = (b * (Math.Pow(-1, (i + j)) * (Determinant_matrix(CSQ - 1, _theInnerMat))) % 26);
                     if (_theAnsPowD < 0)
                         _theAnsPowD += 26;
                     keyMatrixOutput[Leni, Lenj] = _theAnsPowD;
@@ -290,13 +309,13 @@ namespace SecurityLibrary
                 i += 1;
             }
             keyMatrixOutput = _FiRes;
-            _Count = 0;
-            for (int i = 0; i < _CSQ;)
+            Count = 0;
+            for (int i = 0; i < CSQ;)
             {
-                for (int j = 0; j < _CSQ;)
+                for (int j = 0; j < CSQ;)
                 {
-                    key[_Count] = (int)keyMatrixOutput[i, j];
-                    _Count++; j++;
+                    key[Count] = (int)keyMatrixOutput[i, j];
+                    Count++; j++;
                 }
                 i += 1;
             }
@@ -382,24 +401,29 @@ namespace SecurityLibrary
 
         public List<int> Encrypt(List<int> plainText, List<int> key)
         {
-            List<int> cipher = new List<int>();
+            List<int> cipher_text = new List<int>();
+            int n = (int)Math.Sqrt(key.Count);
 
-            int m = (int)Math.Sqrt(key.Count);
-            List<List<int>> keymat = generate_matrix(key, m, true);//true if we generate a key matrix
-            List<List<int>> plain_mat = generate_matrix(plainText, m, false); //false if we generate a non key matrix
+            List<List<int>> plain_mat = generate_matrix(plainText, n, false);
 
-            for (int i = 0; i < plainText.Count / m; i++)
+            List<List<int>> keymatarix = generate_matrix(key, n, true);
+
+            int i = 0;
+            while (i < plainText.Count / n)
             {
-                List<int> tmp = MultiblyMatrix(keymat, plain_mat[i], m);
-                for (int j = 0; j < m; j++)
+                List<int> tmp = MultiblyMatrix(keymatarix, plain_mat[i], n);
+                int j = 0;
+                while (j < n)
                 {
-                    cipher.Add(tmp[j]);
+                    cipher_text.Add(tmp[j]);
+                    j++;
                 }
+                i++;
             }
-            return cipher;
+            return cipher_text;
         }
-        //----------------
-        public List<int> Analyse3By3Key(List<int> plainText, List<int> cipherText)
+            
+            public List<int> Analyse3By3Key(List<int> plainText, List<int> cipherText)
         {
             int Ln = 0;
 
