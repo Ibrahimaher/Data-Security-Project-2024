@@ -42,3 +42,8 @@
 
 The Caesar cipher is a simple encryption technique that was used by Julius Caesar to send secret messages to his allies. It works by shifting the letters in the plaintext message by a certain number of positions, known as the “shift” or “key”.
 <p align="center"><img  src="https://github.com/abdalla-am/Data-Security-Project-2024/blob/6529df74081791293e5fd680b860d99d2bc50e8f/readme%20photos/ceaser%20algo%20photo.gif"  /></p>
+
+
+## ➡️ Monoalphabetic algorithm ⬅️
+
+Monoalphabetic Cipher is a cipher where the letters of the plain text are mapped to ciphertext letters based on a single alphabetic key. It is a one to one mapping.
