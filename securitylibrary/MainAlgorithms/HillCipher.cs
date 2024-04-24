@@ -181,13 +181,15 @@ namespace SecurityLibrary
              double Determinant_matrix(int m, int[,] keyMatrix)
             {
 
-                int[,] _InnerMat = new int[m - 1, m - 1];
+                int[,] InnerMat = new int[m - 1, m - 1];
                 double det = 0;
+
+
                 switch (m)
                 {
                     case 2:
                         return ((keyMatrix[0, 0] * keyMatrix[1, 1]) - (keyMatrix[1, 0] * keyMatrix[0, 1]));
-                        break;
+                          break;
                     case 3:
                         int k = 0;
                         while (k < m)
@@ -202,15 +204,16 @@ namespace SecurityLibrary
                                     {
                                         continue;
                                     }
-                                    _InnerMat[InnerI, InnerJ] = keyMatrix[i, j];
+                                    InnerMat[InnerI, InnerJ] = keyMatrix[i, j];
                                     InnerJ++;
                                 }
                                 InnerI += 1;
                                 i += 1;
                             }
-                            double res = Determinant_matrix(m - 1, _InnerMat);
-                            double _powOp = (Math.Pow(-1, k) * keyMatrix[0, k] * res);
-                            det = det + _powOp;
+                            double res = Determinant_matrix(m - 1, InnerMat);
+
+                            double powOp = (Math.Pow(-1, k) * keyMatrix[0, k] * res);
+                            det = det + powOp;
                             k++;
                         }
                         break;
