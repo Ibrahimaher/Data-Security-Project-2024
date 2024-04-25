@@ -10,7 +10,7 @@ namespace SecurityLibrary
     public class HillCipher : ICryptographicTechnique<List<int>, List<int>>
     {
         
-
+        //hill_cipther
 
         private List<int> MultiblyMatrix(List<List<int>> key, List<int> MatRow, int m)
         {
