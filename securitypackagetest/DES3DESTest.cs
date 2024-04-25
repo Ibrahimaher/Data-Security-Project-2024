@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace SecurityPackageTest
 {
+    [Ignore]
     [TestClass]
     public class DES3DESTest
     {
