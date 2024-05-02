@@ -29,7 +29,7 @@
  - ✅ DES (Data Encryption Standard)
  - ✅ AES (Advanced Encryption Standard)
  - ✅ Extended Euclidean
- - ❌ RC4 (Rivest Cipher 4)
+ - ✅ RC4 (Rivest Cipher 4)
  - ❌ RSA
  - ❌ ELGAMAL
  - ❌ Diffie–Hellman (DH)
