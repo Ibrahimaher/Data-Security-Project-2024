@@ -31,7 +31,7 @@
  - ✅ Extended Euclidean
  - ✅ RC4 (Rivest Cipher 4)
  - ❌ RSA
- - ❌ ELGAMAL
+ - ✅ ELGAMAL
  - ❌ Diffie–Hellman (DH)
  - ✅ Triple DES
  - ❌ MD5 (Message-Digest)
